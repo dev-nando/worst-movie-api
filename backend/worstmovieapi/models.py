@@ -1,18 +1,30 @@
 from django.db import models
 
-class Produtor(models.Model):
-    nome = models.CharField("Nome")
+class Producer(models.Model):
+    name = models.CharField("Name")
 
-class Estudio(models.Model):
-    nome = models.CharField("Nome")
+    def __str__(self) -> str:
+        return self.name
 
-class Filme(models.Model):
-    nome = models.CharField("Nome")
-    produtor = models.ManyToManyField(Produtor)
-    estudio = models.ManyToManyField(Estudio)
 
-class Premio(models.Model):
-    ano = models.IntegerField("Ano")
-    concorrentes = models.ManyToManyField(Filme)
-    ganhador = models.ForeignKey(Filme, on_delete=models.DO_NOTHING, related_name="ganhador", null=True)
+class Studio(models.Model):
+    name = models.CharField("Name")
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Movie(models.Model):
+    name = models.CharField("Name")
+    producer = models.ManyToManyField(Producer, related_name='movies')
+    studio = models.ManyToManyField(Studio, related_name='movies')
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Award(models.Model):
+    year = models.IntegerField("Year")
+    contestants = models.ManyToManyField(Movie, related_name="contestant")
+    winner = models.ManyToManyField(Movie, related_name="awards")
 

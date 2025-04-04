@@ -6,3 +6,6 @@ db.sqlite3
 .env
 venv
 data/*.csv
+comandos
+run.sh
+build.sh

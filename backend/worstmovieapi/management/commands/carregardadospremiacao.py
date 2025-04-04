@@ -3,7 +3,7 @@ import os
 import re
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from worstmovieapi.models import Produtor, Estudio, Filme, Premio
+from worstmovieapi.models import Producer, Studio, Movie, Award
 
 class Command(BaseCommand):
     help = 'Importa os dados da premiação para o banco de dados'
@@ -22,27 +22,26 @@ class Command(BaseCommand):
                 # Produtores
                 reg_produtores = linha.get("producers")
                 produtores = [
-                    Produtor.objects.get_or_create(nome=name.strip())[0] \
+                    Producer.objects.get_or_create(name=name.strip())[0] \
                         for name in re.split(r",\sand\s|,\s|\sand\s", reg_produtores)]
                 
                 # Estúdio
                 reg_estudios = linha.get("studios")
                 estudios = [
-                    Estudio.objects.get_or_create(nome=name.strip())[0] \
+                    Studio.objects.get_or_create(name=name.strip())[0] \
                         for name in re.split(r",\sand\s|,\s|\sand\s", reg_estudios)]
 
                 # Filme
-                filme, _ = Filme.objects.get_or_create(nome=linha.get("title"))
+                filme, _ = Movie.objects.get_or_create(name=linha.get("title"))
                 for es in estudios:
-                    filme.estudio.add(es)
+                    filme.studio.add(es)
                 for pro in produtores:
-                    filme.produtor.add(pro)
+                    filme.producer.add(pro)
 
                 # Premio
-                premio, _ = Premio.objects.get_or_create(ano=linha.get("year"))
-                premio.concorrentes.add(filme)
+                premio, _ = Award.objects.get_or_create(year=linha.get("year"))
+                premio.contestants.add(filme)
                 if linha.get("winner").lower() == "yes":
-                    premio.ganhador = filme
-                    premio.save()
+                    premio.winner.add(filme)
 
         self.stdout.write(self.style.SUCCESS("Dados foram importados para o Banco de Dados!"))
