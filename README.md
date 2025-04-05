@@ -1,4 +1,7 @@
 # Worst Movie API
+![Badge](https://img.shields.io/static/v1?label=Django&message=5.2&color=red&style=flat&logo=Django) ![Badge](https://img.shields.io/static/v1?label=DjangoREST&message=3.16.0&color=red&style=flat&logo=DjangoREST) ![Badge](https://img.shields.io/static/v1?label=Docker&message=container&color=blue&style=flat&logo=Docker) 
+![Badge](https://img.shields.io/static/v1?label=Status&message=completo&color=brightgreen&style=flat)
+
 API RESTful para leitura da lista de indicados e vencedores da categoria Pior Filme do Golden Raspberry Awards.
 
 # Preparação Ambiente
