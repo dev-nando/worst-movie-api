@@ -1,0 +1,17 @@
+version: "3.2"
+services:
+  backend:
+    build: .
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - "${BACK_END_PROJECT_FOLDER}:/app"
+      - "${BACK_END_DATA_FOLDER}:/var/data"
+    command: bash -c "python manage.py migrate && 
+      \ python manage.py initadmin && 
+      \ python manage.py makemigrations && 
+      \ python manage.py migrate && 
+      \ python manage.py carregardadospremiacao && 
+      \ python manage.py runserver 0.0.0.0:8000"

@@ -1,21 +1,34 @@
+"""Comando que carrega os dados do arquivo para o banco de dados."""
 import csv
-import os
 import re
-from django.core.management.base import BaseCommand
+from logging import getLogger
+from pathlib import Path
+
 from django.conf import settings
-from worstmovieapi.models import Producer, Studio, Movie, Award
+from django.core.management.base import BaseCommand
+from worstmovieapi.models import Award, Movie, Producer, Studio
+
+logger = getLogger("django")
 
 class Command(BaseCommand):
-    help = 'Importa os dados da premiação para o banco de dados'
+    """Implementação do comando."""
 
-    def handle(self, *args, **kwargs):
-        if not os.path.exists(settings.DADOS):
-            self.stderr.write(f"Error: File '{settings.DADOS}' not found.")
-            return
+    help = "Importa os dados da premiação para o banco de dados"
 
-        with open(settings.DADOS, newline='', encoding='utf-8') as csvfile:
+    def handle(self, *args, **kwargs) -> None:  # noqa: ANN002, ANN003, ARG002
+        """Lógica do comando."""
+        if not Path(settings.DADOS).exists():
+            msg = f"Arquivo '{settings.DADOS}' nao encontrado!"
+            raise FileNotFoundError(msg)
+
+        logger.info("Iniciando carga")
+
+        with Path(settings.DADOS).open("r", encoding="utf-8") as csvfile:
 
             leitor = csv.DictReader(csvfile, delimiter=";")
+
+            msg = f" '- Identificadas {leitor.line_num} linhas"
+            logger.info(msg)
 
             for linha in leitor:
 
@@ -24,7 +37,7 @@ class Command(BaseCommand):
                 produtores = [
                     Producer.objects.get_or_create(name=name.strip())[0] \
                         for name in re.split(r",\sand\s|,\s|\sand\s", reg_produtores)]
-                
+
                 # Estúdio
                 reg_estudios = linha.get("studios")
                 estudios = [
@@ -44,4 +57,8 @@ class Command(BaseCommand):
                 if linha.get("winner").lower() == "yes":
                     premio.winner.add(filme)
 
-        self.stdout.write(self.style.SUCCESS("Dados foram importados para o Banco de Dados!"))
+                msg = f"   '- linha carregada: {list(linha.values())}"
+                logger.info(msg)
+
+        logger.info("Dados foram carregados para o Banco de Dados!")
+
