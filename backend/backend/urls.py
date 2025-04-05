@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 from worstmovieapi.views import (
+    getawards,
     getminmaxproduceryearawardinterval,
     getmovies,
     getproducers,
@@ -28,7 +29,10 @@ from worstmovieapi.views import (
 urlpatterns = [
     path("admin/", admin.site.urls)
     , path("", TemplateView.as_view(template_name="index.html"))
+    , path("api/awards/", getawards, name="awards")
     , path("api/producers/", getproducers, name="producers")
-    , path("api/producers/minmaxpyai/", getminmaxproduceryearawardinterval, name="minmaxpyai")
+    , path(
+        "api/producers/minmaxpyai/"
+        , getminmaxproduceryearawardinterval, name="minmaxpyai")
     , path("api/studios/", getstudios, name="studios")
     , path("api/movies/", getmovies, name="movies")]

@@ -5,7 +5,7 @@ from typing import ClassVar
 
 from rest_framework import serializers
 
-from worstmovieapi.models import Movie, Producer, Studio
+from worstmovieapi.models import Award, Movie, Producer, Studio
 
 
 class ProducerSerializer(serializers.ModelSerializer):
@@ -55,4 +55,21 @@ class MovieSerializer(serializers.ModelSerializer):
 
         model = Movie
         fields: ClassVar[list[str]] = ["name", "producer", "studio"]
+
+
+class AwardSerializer(serializers.ModelSerializer):
+    """Serializador das informações dos Prêmios.
+
+    :param serializers: Serializador herdado.
+    :type serializers: serializers.ModelSerializer
+    """
+
+    contestants = serializers.StringRelatedField(many=True)
+    winner = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        """Meta Info."""
+
+        model = Award
+        fields: ClassVar[list[str]] = ["year", "contestants", "winner"]
 

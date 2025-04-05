@@ -4,8 +4,9 @@ from urllib.request import Request
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from worstmovieapi.models import Movie, Producer, Studio
+from worstmovieapi.models import Award, Movie, Producer, Studio
 from worstmovieapi.serializers import (
+    AwardSerializer,
     MovieSerializer,
     ProducerSerializer,
     StudioSerializer,
@@ -86,5 +87,18 @@ def getmovies(request:Request) -> Response:  # noqa: ARG001
     """
     filmes = Movie.objects.all()
     serializer = MovieSerializer(filmes, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def getawards(request:Request) -> Response:  # noqa: ARG001
+    """View que retorna as premiações.
+
+    :param request: Request recebido.
+    :type request: Request
+    :return: Dados serializados das premiações.
+    :rtype: Response
+    """
+    premios = Award.objects.all()
+    serializer = AwardSerializer(premios, many=True)
     return Response(serializer.data)
 
