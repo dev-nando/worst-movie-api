@@ -7,8 +7,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - "${BACK_END_PROJECT_FOLDER}:/app"
-      - "${BACK_END_DATA_FOLDER}:/var/data"
+      - "./backend:/app"
+      - "./data:/var/data"
     command: bash -c "python manage.py migrate && 
       \ python manage.py initadmin && 
       \ python manage.py makemigrations && 
